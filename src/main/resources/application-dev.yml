@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: fww-integrator
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+fww:
+  core:
+    url: http://fww-core-service:8081
+    username: application
+    password: Testing123
+
+server:
+  port: 8082
+  servlet:
+    context-path: /api
+
+app:
+  jwt:
+    secret: ktjycgqfpsIOZowHc4CBd5HIyxb5sGQBVwJ28l0pCEkoB2hvyEOdosD0cDJUb5cSLaeWEX58k5S3mv1kNmYBmVofZ18nHlFIlc2d
+    expiration: 90000000000
