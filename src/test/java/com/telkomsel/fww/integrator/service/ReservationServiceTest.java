@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -54,6 +55,7 @@ class ReservationServiceTest {
 
     @Test
     void postReservation() throws SchedulerException {
+        ReflectionTestUtils.setField(reservationService, "zoneId", "UTC");
         String bookingCode = "BOOK-FWW-" + RandomStringUtils.random(5,
                 true, true);
 

@@ -47,6 +47,7 @@ app:
   jwt:
     secret: ktjycgqfpsIOZowHc4CBd5HIyxb5sGQBVwJ28l0pCEkoB2hvyEOdosD0cDJUb5cSLaeWEX58k5S3mv1kNmYBmVofZ18nHlFIlc2d
     expiration: 90000000000
+  zone-id: "UTC"
 
 server:
   port: 8082

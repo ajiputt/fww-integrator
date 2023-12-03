@@ -7,6 +7,7 @@ import com.telkomsel.fww.integrator.job.QuartzJob;
 import com.telkomsel.fww.integrator.payload.request.RequestReservation;
 import com.telkomsel.fww.integrator.payload.response.ResponseMidtrans;
 import org.quartz.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -18,6 +19,9 @@ import java.util.List;
 
 @Service
 public class ReservationService {
+
+    @Value("${app.zone-id}")
+    private String zoneId;
 
     private final ReservationClientService reservationClientService;
 
@@ -68,7 +72,7 @@ public class ReservationService {
 
             ZonedDateTime expiredTime =
                     ZonedDateTime.of(LocalDateTime.now().plusMinutes(5),
-                            ZoneId.of("Asia/Jakarta"));
+                            ZoneId.of(zoneId));
 
             JobDetail jobDetail = quartzJob.buildJobDetail(response.getBookingCode());
             Trigger trigger = quartzJob.buildJobTrigger(jobDetail, expiredTime);
