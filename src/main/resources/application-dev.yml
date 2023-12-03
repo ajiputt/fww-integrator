@@ -9,10 +9,10 @@ spring:
     username: user-fww
     password: fww123
   rabbitmq:
-    host: host.docker.internal
+    host: rabbitmq
     port: 5672
-    username: fww-rabbitmq
-    password: Telk0ms3L@001
+    username: guest
+    password: guest
   mail:
     username: AKIA2WLDYKX5LBVNBVAU
     password: BC82KOOcUgfXkCduWyf19CTPAvyH6+EE6ZQM8P1OxLQz
