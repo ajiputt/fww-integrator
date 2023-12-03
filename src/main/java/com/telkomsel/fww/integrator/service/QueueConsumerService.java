@@ -1,5 +1,6 @@
 package com.telkomsel.fww.integrator.service;
 
+import com.telkomsel.fww.integrator.common.DetailEmailQueue;
 import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -16,7 +17,8 @@ public class QueueConsumerService {
     }
 
     @RabbitListener(queues = "${rabbitmq.email.queue}")
-    public void receivedEmailMessage(String bookingCode) throws MessagingException {
-        emailService.sendEmail(bookingCode);
+    public void receivedEmailMessage(DetailEmailQueue
+                                             detailEmailQueue) throws MessagingException {
+        emailService.sendEmail(detailEmailQueue.getBookingCode(), detailEmailQueue.getAction());
     }
 }

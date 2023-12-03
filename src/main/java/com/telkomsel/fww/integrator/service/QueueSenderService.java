@@ -1,5 +1,6 @@
 package com.telkomsel.fww.integrator.service;
 
+import com.telkomsel.fww.integrator.common.DetailEmailQueue;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,8 @@ public class QueueSenderService {
     }
 
 
-    public void sendQueue(String bookingCode) {
-        rabbitTemplate.convertAndSend(emailQueueName, bookingCode);
+    public void sendQueue(String bookingCode, String action) {
+        rabbitTemplate.convertAndSend(emailQueueName,
+                DetailEmailQueue.builder().bookingCode(bookingCode).action(action).build());
     }
 }

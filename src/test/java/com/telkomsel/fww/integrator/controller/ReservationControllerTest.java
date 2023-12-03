@@ -98,13 +98,14 @@ class ReservationControllerTest {
         List<Reservation> resp =
                 Arrays.asList(Reservation.builder().bookingCode("bookingcode1").build(),
                         Reservation.builder().bookingCode("bookingcode2").build());
+        Principal mockPrincipal = Mockito.mock(Principal.class);
+        when(mockPrincipal.getName()).thenReturn("username");
+
 
         when(reservationService.getReservationByUser(any())).thenReturn(resp);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/v1/reservations")
-                        .param("username", "username")
-                        .with(SecurityMockMvcRequestPostProcessors.user("username")
-                                .password("pass")))
+                        .principal(mockPrincipal))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[1]" +
                         ".booking_code").value("bookingcode2"));
@@ -135,8 +136,8 @@ class ReservationControllerTest {
                 .status("P")
                 .seatNo(1).build());
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/v1/reservations/cancel/{booking" +
-                                "-code}", "booking-code")
+        mockMvc.perform(MockMvcRequestBuilders.put("/v1/reservations/callback" +
+                                "/success/{booking-code}", "booking-code")
                         .with(SecurityMockMvcRequestPostProcessors.user("username")
                                 .password("pass")))
                 .andExpect(MockMvcResultMatchers.status().isOk())

@@ -63,8 +63,13 @@ class EmailServiceTest {
 
         when(templateEngine.process(anyString(), any())).thenReturn("email body");
 
-        emailService.sendEmail("Test");
+        emailService.sendEmail("Test", "booking");
 
-        verify(javaMailSender, times(1)).send(mimeMessage);
+        emailService.sendEmail("Test", "payment");
+
+        emailService.sendEmail("Test", "cancel");
+
+        emailService.sendEmail("Test", "expired");
+        verify(javaMailSender, times(4)).send(mimeMessage);
     }
 }

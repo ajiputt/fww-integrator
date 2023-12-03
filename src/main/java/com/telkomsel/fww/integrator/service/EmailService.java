@@ -33,9 +33,11 @@ public class EmailService {
         this.templateEngine = templateEngine;
     }
 
-    public void sendEmail(String bookingCode) throws MessagingException {
+
+    public void sendEmail(String bookingCode, String action) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
+        String htmlContent;
 
         Reservation reservation =
                 reservationClientService.getReservationByBookingCode(bookingCode);
@@ -45,9 +47,23 @@ public class EmailService {
 
         helper.setFrom("ajiperdanaputra90@gmail.com");
         helper.setTo("ajiperdanaputra90@gmail.com");
-        helper.setSubject("Flight Has Been Booking");
-        String htmlContent = templateEngine.process("email-confirmation",
-                new Context());
+        if (action.equals("booking")) {
+            helper.setSubject("Flight Has Been Booking");
+            htmlContent = templateEngine.process("email-confirmation",
+                    new Context());
+        } else if (action.equals("payment")) {
+            helper.setSubject("Payment Received! Flight Has Been Paid");
+            htmlContent = templateEngine.process("email-payment",
+                    new Context());
+        } else if (action.equals("cancel")) {
+            helper.setSubject("Flight Has Been Canceled");
+            htmlContent = templateEngine.process("email-cancel",
+                    new Context());
+        } else {
+            helper.setSubject("Your Booking Was Expired");
+            htmlContent = templateEngine.process("email-expired",
+                    new Context());
+        }
         htmlContent = htmlContent.replaceAll("##BOOKING_CODE##",
                 reservation.getBookingCode()).replaceAll("##DEPARTURE##",
                 schedule.getAirportDeparture().getName()).replaceAll("##DESTINATION##",

@@ -1,5 +1,6 @@
 package com.telkomsel.fww.integrator.service;
 
+import com.telkomsel.fww.integrator.common.DetailEmailQueue;
 import jakarta.mail.MessagingException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,10 +25,10 @@ class QueueConsumerServiceTest {
 
     @Test
     void receivedEmailMessage() throws MessagingException {
-        doNothing().when(emailService).sendEmail(isA(String.class));
+        doNothing().when(emailService).sendEmail(isA(String.class), isA(String.class));
 
-        queueConsumerService.receivedEmailMessage("test");
+        queueConsumerService.receivedEmailMessage(DetailEmailQueue.builder().bookingCode("test").action("booking").build());
 
-        verify(emailService, times(1)).sendEmail("test");
+        verify(emailService, times(1)).sendEmail("test", "booking");
     }
 }

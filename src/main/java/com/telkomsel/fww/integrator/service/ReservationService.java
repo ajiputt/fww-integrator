@@ -74,7 +74,7 @@ public class ReservationService {
             Trigger trigger = quartzJob.buildJobTrigger(jobDetail, expiredTime);
             scheduler.scheduleJob(jobDetail, trigger);
 
-            queueSenderService.sendQueue(response.getBookingCode());
+            queueSenderService.sendQueue(response.getBookingCode(), "booking");
             return response;
         } else {
             throw new PaymentException();
@@ -90,13 +90,18 @@ public class ReservationService {
             case "success" -> {
                 reservation.setStatus("P");
                 scheduler.unscheduleJob(TriggerKey.triggerKey(bookingCode, "expired-triggers"));
+                queueSenderService.sendQueue(bookingCode, "payment");
             }
             case "cancel" -> {
                 reservation.setStatus("C");
                 scheduler.unscheduleJob(TriggerKey.triggerKey(bookingCode, "expired-triggers"));
+                queueSenderService.sendQueue(bookingCode, "cancel");
             }
             case "checkin" -> reservation.setStatus("D");
-            default -> reservation.setStatus("E");
+            default -> {
+                reservation.setStatus("E");
+                queueSenderService.sendQueue(bookingCode, "expired");
+            }
         }
         return reservationClientService.updateReservation(reservation);
     }

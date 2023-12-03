@@ -52,10 +52,10 @@ public class ReservationController {
     }
 
     @LogController
-    @GetMapping(value = "/v1/reservations", params = "username")
-    public ResponseEntity<Object> getReservationsByUser(@RequestParam(
-            "username") String username) {
-        List<Reservation> resp = reservationService.getReservationByUser(username);
+    @GetMapping(value = "/v1/reservations")
+    public ResponseEntity<Object> getReservationsByUser(Principal principal) {
+        List<Reservation> resp =
+                reservationService.getReservationByUser(principal.getName());
         return ResponseHandler.generateResponse(ResponseCode.SUCCESS,
                 HttpStatus.OK, resp);
     }
