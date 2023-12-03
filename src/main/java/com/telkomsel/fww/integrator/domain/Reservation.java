@@ -13,8 +13,6 @@ import java.time.LocalDateTime;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Reservation {
 
-    private Integer id;
-
     private String bookingCode;
 
     private String createdBy;

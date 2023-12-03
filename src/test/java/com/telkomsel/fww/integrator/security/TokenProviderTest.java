@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.security.core.Authentication;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Date;
 
@@ -22,7 +23,6 @@ class TokenProviderTest {
 
     TokenProvider tokenProvider;
 
-    TokenProvider tokenProvider2;
 
     private String secret;
 
@@ -33,17 +33,19 @@ class TokenProviderTest {
 
     @BeforeEach
     void setUp() {
-        tokenProvider2 = new TokenProvider();
+        tokenProvider = new TokenProvider();
 
         secret = "onlyTheTestKnowsThisSecretOnlyTheTestKnowsThisSecretOnlyTheTestKnowsThisSecretOnlyTheTestKnowsThisSecret";
         expiration = 90000L;
-        tokenProvider = new TokenProvider(expiration, secret);
+        ReflectionTestUtils.setField(tokenProvider, "secret", secret);
+        ReflectionTestUtils.setField(tokenProvider, "expiration", expiration);
 
         auth = Mockito.mock(Authentication.class);
     }
 
     @Test
     void createToken() {
+
         UserPrincipal userPrincipal =
                 new UserPrincipal(Member.builder().username("usernameTest").build(),
                         null);

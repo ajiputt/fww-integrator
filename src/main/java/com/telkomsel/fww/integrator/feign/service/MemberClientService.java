@@ -16,10 +16,6 @@ public interface MemberClientService {
     @GetMapping("/members/search/findByUsername?projection=member-view")
     Member getMemberByUsername(@RequestParam("username") String username);
 
-    @GetMapping("/members/search/existsByUsernameAndTokenActive")
-    Boolean existMemberByUsernameAndToken(@RequestParam("username") String username,
-                                          @RequestParam("token") String token);
-
     @GetMapping("/members/search/existsByUsernameOrEmail")
     Boolean existMemberByUsernameOrEmail(@RequestParam("username") String username,
                                          @RequestParam("email") String email);

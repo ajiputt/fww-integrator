@@ -23,15 +23,6 @@ public class TokenProvider {
     @Value("${app.jwt.secret}")
     private String secret;
 
-    public TokenProvider() {
-
-    }
-
-    public TokenProvider(Long expiration, String secret) {
-        this.expiration = expiration;
-        this.secret = secret;
-    }
-
     public String createToken(Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         return Jwts.builder()

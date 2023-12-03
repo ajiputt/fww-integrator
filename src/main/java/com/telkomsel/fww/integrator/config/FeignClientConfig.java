@@ -14,17 +14,9 @@ public class FeignClientConfig {
     @Value("${fww.core.password}")
     private String password;
 
-    public FeignClientConfig() {
-
-    }
-
-    public FeignClientConfig(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
-
     @Bean
     BasicAuthRequestInterceptor basicAuthRequestInterceptor() {
         return new BasicAuthRequestInterceptor(username, password);
     }
+
 }

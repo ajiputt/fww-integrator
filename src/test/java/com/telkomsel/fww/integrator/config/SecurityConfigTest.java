@@ -12,9 +12,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,23 +32,12 @@ class SecurityConfigTest {
     @Mock
     private AuthenticationConfiguration authConfig;
 
-    @Mock
-    private AuthenticationManager authenticationManager;
-
-    @Mock
-    private HttpSecurity httpSecurity;
-
-    @Mock
-    private AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @BeforeEach
     void init() {
         securityConfig = new SecurityConfig(restAuthenticationEntryPoint,
                 tokenProvider, customUserDetailsService);
         authConfig = Mockito.mock(AuthenticationConfiguration.class);
-        httpSecurity = Mockito.mock(HttpSecurity.class);
-        authenticationManagerBuilder =
-                Mockito.mock(AuthenticationManagerBuilder.class);
     }
 
     @Test
@@ -73,19 +60,4 @@ class SecurityConfigTest {
         Assertions.assertThat(resp).isNotNull();
     }
 
-    @Test
-    void authManager() throws Exception {
-
-//        authenticationManagerBuilder.userDetailsService(customUserDetailsService).passwordEncoder(new BCryptPasswordEncoder()).and().build();
-//        Mockito.when(httpSecurity.getSharedObject(any())).thenReturn(authenticationManagerBuilder);
-//        Mockito.when(authenticationManagerBuilder.userDetailsService(any())).thenReturn(AuthenticationManager);
-//        AuthenticationManager resp = securityConfig.authManager(httpSecurity);
-//        Assertions.assertThat(resp).isNotNull();
-    }
-
-    @Test
-    void filterChain() throws Exception {
-//        SecurityFilterChain resp = securityConfig.filterChain(httpSecurity);
-//        Assertions.assertThat(resp).isNotNull();
-    }
 }

@@ -4,23 +4,24 @@ import feign.auth.BasicAuthRequestInterceptor;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.util.ReflectionTestUtils;
 
 class FeignClientConfigTest {
 
     FeignClientConfig feignClientConfig;
 
-    FeignClientConfig feignClientConfig2;
-
     @BeforeEach
     void init() {
         feignClientConfig = new FeignClientConfig();
-        feignClientConfig2 = new FeignClientConfig("test", "test");
+
+        ReflectionTestUtils.setField(feignClientConfig, "username", "test");
+        ReflectionTestUtils.setField(feignClientConfig, "password", "test");
     }
 
     @Test
     void basicAuthRequestInterceptor() {
         BasicAuthRequestInterceptor resp =
-                feignClientConfig2.basicAuthRequestInterceptor();
+                feignClientConfig.basicAuthRequestInterceptor();
         Assertions.assertThat(resp).isNotNull();
     }
 }

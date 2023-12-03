@@ -17,6 +17,12 @@ public interface ReservationClientService {
     @PostMapping("/reservations")
     Reservation postReservation(@RequestBody Reservation reservation);
 
+    @PostMapping("/reservations/update")
+    Reservation updateReservation(@RequestBody Reservation reservation);
+
+    @PostMapping("/reservations/update-checkin")
+    Reservation updateCheckinReservation(@RequestBody Reservation reservation);
+
     @GetMapping("/reservations/search/findByCreatedBy?projection=reservation-view")
     ReservationEmbeddedResponse getReservationByUser(@RequestParam("username") String username);
 

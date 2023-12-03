@@ -1,20 +1,28 @@
 package com.telkomsel.fww.integrator.service;
 
 import com.telkomsel.fww.integrator.domain.Reservation;
+import com.telkomsel.fww.integrator.exception.PaymentException;
 import com.telkomsel.fww.integrator.feign.response.ReservationEmbeddedResponse;
 import com.telkomsel.fww.integrator.feign.service.ReservationClientService;
+import com.telkomsel.fww.integrator.job.QuartzJob;
+import com.telkomsel.fww.integrator.payload.request.RequestReservation;
+import com.telkomsel.fww.integrator.payload.response.ResponseMidtrans;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
@@ -26,25 +34,62 @@ class ReservationServiceTest {
     @Mock
     private ReservationClientService reservationClientService;
 
+    @Mock
+    private QueueSenderService queueSenderService;
+
+    @Mock
+    private QuartzJob quartzJob;
+
+    @Mock
+    private Scheduler scheduler;
+
+    @Mock
+    private HttpExternalService httpExternalService;
+
     @BeforeEach
     void init() {
-        reservationService = new ReservationService(reservationClientService);
+        reservationService = new ReservationService(reservationClientService,
+                queueSenderService, quartzJob, scheduler, httpExternalService);
     }
 
     @Test
-    void postReservation() {
-        Reservation request = Reservation.builder()
-                .bookingCode("testCode001")
-                .createdAt(LocalDateTime.now())
+    void postReservation() throws SchedulerException {
+        String bookingCode = "BOOK-FWW-" + RandomStringUtils.random(5,
+                true, true);
+
+        RequestReservation request = RequestReservation.builder()
                 .nik("12345678")
                 .scheduleCode("schedule001")
-                .status("B").build();
-        when(reservationClientService.postReservation(any(Reservation.class)))
-                .thenReturn(request);
-        Reservation resp =
-                reservationService.postReservation(request);
+                .seatNo(1).build();
 
-        assertEquals(request.getBookingCode(), resp.getBookingCode());
+        ResponseMidtrans responseMidtrans =
+                ResponseMidtrans.builder().statusCode("00").build();
+
+        when(httpExternalService.sendPaymentInfo(any(), any())).thenReturn(responseMidtrans);
+
+
+        when(reservationClientService.postReservation(any(Reservation.class)))
+                .thenReturn(Reservation.builder()
+                        .bookingCode(bookingCode)
+                        .nik(request.getNik())
+                        .scheduleCode(request.getScheduleCode())
+                        .seatNo(request.getSeatNo()).build());
+        Reservation resp =
+                reservationService.postReservation(request, "username");
+
+        assertEquals(bookingCode, resp.getBookingCode());
+    }
+
+    @Test
+    void postReservationFailed() {
+        ResponseMidtrans responseMidtrans =
+                ResponseMidtrans.builder().statusCode("01").build();
+
+        when(httpExternalService.sendPaymentInfo(any(), any())).thenReturn(responseMidtrans);
+
+
+        assertThrows(PaymentException.class,
+                () -> reservationService.postReservation(RequestReservation.builder().build(), "username"));
     }
 
     @Test

@@ -7,7 +7,8 @@ public enum ResponseCode {
     ERROR_VALIDATION("03", "VALIDATION ERROR"),
     ERROR_PARAMETER("04", "MISSING PARAMETER"),
     ERROR_METHOD("05", "METHOD NOT ALLOWED"),
-    ERROR_GENERAL("05", "INTERNAL SERVER ERROR");
+    ERROR_GENERAL("05", "INTERNAL SERVER ERROR"),
+    ERROR_PASSENGER("06", "PASSENGER DOES NOT MEET REQUIREMENT");
 
     private final String code;
     private final String description;

@@ -5,6 +5,7 @@ import com.telkomsel.fww.integrator.common.ResponseError;
 import com.telkomsel.fww.integrator.utils.ResponseHandler;
 import feign.RetryableException;
 import lombok.extern.slf4j.Slf4j;
+import org.quartz.SchedulerException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -66,6 +67,39 @@ public class GlobalExceptionHandler {
         return buildResponseEntity(new ResponseError(LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST, "Username or Email Already Exist",
                 e.getMessage()), ResponseCode.ERROR_PARAMETER);
+    }
+
+    @ExceptionHandler(SchedulerException.class)
+    public ResponseEntity<Object> handleSchedulerException(SchedulerException e) {
+        log.error(e.getMessage());
+        return buildResponseEntity(new ResponseError(LocalDateTime.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error",
+                e.getMessage()), ResponseCode.ERROR_GENERAL);
+    }
+
+    @ExceptionHandler(DisdukcapilException.class)
+    public ResponseEntity<Object> handleDisdukcapilException(DisdukcapilException e) {
+        log.error(e.getMessage());
+        return buildResponseEntity(new ResponseError(LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST, "NIK was not found",
+                e.getMessage()), ResponseCode.ERROR_PASSENGER);
+    }
+
+    @ExceptionHandler(PeduliLindungiException.class)
+    public ResponseEntity<Object> handlePeduliLindungiException(PeduliLindungiException e) {
+        log.error(e.getMessage());
+        return buildResponseEntity(new ResponseError(LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST, "Passenger doesn't meet vaccine " +
+                "regulation",
+                e.getMessage()), ResponseCode.ERROR_PASSENGER);
+    }
+
+    @ExceptionHandler(PaymentException.class)
+    public ResponseEntity<Object> handlePaymentException(PaymentException e) {
+        log.error(e.getMessage());
+        return buildResponseEntity(new ResponseError(LocalDateTime.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR, "Username or Email Already Exist",
+                e.getMessage()), ResponseCode.ERROR_GENERAL);
     }
 
     @ExceptionHandler(Exception.class)

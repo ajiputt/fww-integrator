@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: fww-integrator
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  mail:
+    username: AKIA2WLDYKX5LBVNBVAU
+    password: BC82KOOcUgfXkCduWyf19CTPAvyH6+EE6ZQM8P1OxLQz
+    host: email-smtp.ap-southeast-1.amazonaws.com
+    port: 465
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          ssl:
+            enable: true
+
+fww:
+  core:
+    url: http://localhost:8081
+    username: application
+    password: Testing123
+
+
+app:
+  jwt:
+    secret: ktjycgqfpsIOZowHc4CBd5HIyxb5sGQBVwJ28l0pCEkoB2hvyEOdosD0cDJUb5cSLaeWEX58k5S3mv1kNmYBmVofZ18nHlFIlc2d
+    expiration: 90000000000
+
+server:
+  port: 8082
+  servlet:
+    context-path: /api
+
+rabbitmq:
+  email:
+    queue: fww-email-queue

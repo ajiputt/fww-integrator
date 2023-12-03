@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.quartz.SchedulerException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -36,6 +37,18 @@ class GlobalExceptionHandlerTest {
 
     @Mock
     private RegisterException registerException;
+
+    @Mock
+    private SchedulerException schedulerException;
+
+    @Mock
+    private DisdukcapilException disdukcapilException;
+
+    @Mock
+    private PeduliLindungiException peduliLindungiException;
+
+    @Mock
+    private PaymentException paymentException;
 
     @Mock
     private Exception exception;
@@ -79,6 +92,34 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<Object> resp =
                 globalExceptionHandler.handleRegisterException(registerException);
         Assertions.assertThat(resp.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    void handleSchedulerException() {
+        ResponseEntity<Object> resp =
+                globalExceptionHandler.handleSchedulerException(schedulerException);
+        Assertions.assertThat(resp.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Test
+    void handleDisdukcapilException() {
+        ResponseEntity<Object> resp =
+                globalExceptionHandler.handleDisdukcapilException(disdukcapilException);
+        Assertions.assertThat(resp.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    void handlePeduliLindungiException() {
+        ResponseEntity<Object> resp =
+                globalExceptionHandler.handlePeduliLindungiException(peduliLindungiException);
+        Assertions.assertThat(resp.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    void handlePaymentException() {
+        ResponseEntity<Object> resp =
+                globalExceptionHandler.handlePaymentException(paymentException);
+        Assertions.assertThat(resp.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Test
